@@ -1,0 +1,38 @@
+/* =========================
+   FONTS
+========================= */
+
+/* Vazirmatn / IRANYekan */
+@font-face {
+  font-family: "Vazirmatn";
+  src: url("./fonts/IRANYekanRegular.woff2") format("woff2"),
+       url("./fonts/IRANYekanRegular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Vazirmatn";
+  src: url("./fonts/IRANYekanBold.woff2") format("woff2"),
+       url("./fonts/IRANYekanBold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Material Design Icons */
+@font-face {
+  font-family: "Material Design Icons";
+  src: url("./fonts/materialdesignicons-webfont.woff2") format("woff2"),
+       url("./fonts/materialdesignicons-webfont.woff") format("woff"),
+       url("./fonts/materialdesignicons-webfont.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ICON BASE */
+.mdi:before {
+  font-family: "Material Design Icons" !important;
+}
