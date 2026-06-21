@@ -1,12 +1,9 @@
-/* =========================
-   FONTS
-========================= */
-
-/* Vazirmatn / IRANYekan */
+/* Global Fonts Definition */
 @font-face {
   font-family: "Vazirmatn";
-  src: url("./fonts/IRANYekanRegular.woff2") format("woff2"),
-       url("./fonts/IRANYekanRegular.ttf") format("truetype");
+  src:
+    url("./fonts/IRANYekanRegular.woff2") format("woff2"),
+    url("./fonts/IRANYekanRegular.ttf") format("truetype");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -14,8 +11,9 @@
 
 @font-face {
   font-family: "Vazirmatn";
-  src: url("./fonts/IRANYekanBold.woff2") format("woff2"),
-       url("./fonts/IRANYekanBold.ttf") format("truetype");
+  src:
+    url("./fonts/IRANYekanBold.woff2") format("woff2"),
+    url("./fonts/IRANYekanBold.ttf") format("truetype");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -24,15 +22,77 @@
 /* Material Design Icons */
 @font-face {
   font-family: "Material Design Icons";
-  src: url("./fonts/materialdesignicons-webfont.woff2") format("woff2"),
-       url("./fonts/materialdesignicons-webfont.woff") format("woff"),
-       url("./fonts/materialdesignicons-webfont.ttf") format("truetype");
+  src:
+    url("./fonts/materialdesignicons-webfont.woff2") format("woff2"),
+    url("./fonts/materialdesignicons-webfont.woff") format("woff"),
+    url("./fonts/materialdesignicons-webfont.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
 }
 
-/* ICON BASE */
+/* Apply Vazirmatn font to all elements */
+*,
+*::before,
+*::after {
+  font-family:
+    "Vazirmatn",
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    Arial,
+    sans-serif !important;
+}
+
+/* Ensure font on important elements */
+html,
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+span,
+div,
+a,
+button,
+input,
+textarea,
+select,
+label,
+table,
+th,
+td,
+li,
+blockquote,
+pre,
+code {
+  font-family: "Vazirmatn", system-ui, sans-serif !important;
+}
+
+/* Material Design Icons Base */
 .mdi:before {
   font-family: "Material Design Icons" !important;
+}
+
+/* RTL and typography settings for Persian */
+body {
+  direction: rtl;
+  text-align: right;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Force font on form elements */
+button,
+input,
+select,
+textarea {
+  font-family: "Vazirmatn", system-ui, sans-serif !important;
 }
