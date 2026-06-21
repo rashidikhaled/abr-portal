@@ -15,20 +15,46 @@
 
       <div class="menu">
 
-        <button
-          class="menu-item"
-          :class="{ active: activeMenu === 'policies' }"
-          @click="loadPolicies"
-        >
-          <div class="icon">📄</div>
+       <button
+  class="menu-item"
+  :class="{ active: activeMenu === 'policies' }"
+  @click="loadPolicies"
+>
+  <div class="icon">📄</div>
 
-          <div class="text">
-           <div class="title fancy-title">بیمه‌نامه‌ها</div>
-            <div class="sub">مدیریت قراردادها</div>
-          </div>
+  <div class="text">
+    <div class="title fancy-title">بیمه‌نامه‌ها</div>
+    <div class="sub">مدیریت قراردادها</div>
+  </div>
 
-          <div class="count">{{ policies.length }}</div>
-        </button>
+  <div class="count">{{ policies.length }}</div>
+</button>
+
+<button
+  class="menu-item"
+  :class="{ active: activeMenu === 'funds' }"
+  @click="loadFunds"
+>
+  <div class="icon">🏦</div>
+
+  <div class="text">
+    <div class="title">صندوق‌ها</div>
+    <div class="sub">مدیریت صندوق‌های سرمایه</div>
+  </div>
+</button>
+
+<button
+  class="menu-item"
+  :class="{ active: activeMenu === 'finance' }"
+  @click="loadFinance"
+>
+  <div class="icon">💰</div>
+
+  <div class="text">
+    <div class="title">مالی</div>
+    <div class="sub">گزارش‌های مالی</div>
+  </div>
+</button>
 
       </div>
 
@@ -50,24 +76,24 @@
           <p>نمای کلی بیمه‌نامه‌ها و وضعیت سیستم</p>
         </div>
 
-        <div class="stats">
+<div class="stats">
 
-          <div class="stat">
-            <div class="value">{{ policies.length }}</div>
-            <div class="label">بیمه‌نامه‌ها</div>
-          </div>
+  <div class="stat">
+    <div class="value">{{ policies.length }}</div>
+    <div class="label">تعداد بیمه‌نامه‌ها</div>
+  </div>
 
-          <div class="stat">
-            <div class="value">{{ totalAmount }}</div>
-            <div class="label">مجموع سرمایه</div>
-          </div>
+  <div class="stat">
+    <div class="value">{{ activePolicies }}</div>
+    <div class="label">بیمه‌نامه‌های فعال</div>
+  </div>
 
-          <div class="stat">
-            <div class="value">24M</div>
-            <div class="label">پوشش</div>
-          </div>
+  <div class="stat">
+    <div class="value">{{ latestPolicyDate }}</div>
+    <div class="label">آخرین صدور</div>
+  </div>
 
-        </div>
+</div>
 
       </header>
 
@@ -97,14 +123,11 @@
               <div class="badge">بیمه‌نامه</div>
             </div>
 
-            <h3>{{ item.name }}</h3>
+        <h3>{{ item.name }}</h3>
 
-            <div class="meta">شناسه: {{ item.id }}</div>
+<div class="meta">شماره بیمه‌نامه: {{ item.policyNo }}</div>
 
-            <div class="amount">
-              {{ item.amount.toLocaleString() }} تومان
-            </div>
-
+<div class="meta">تاریخ شروع: {{ item.startDate }}</div>
           </div>
 
         </div>
@@ -113,25 +136,41 @@
     </div>
 
     <!-- MOBILE NAV -->
-    <nav class="mobile-nav">
+<nav class="mobile-nav">
 
-      <button
-        class="nav-item"
-        :class="{ active: activeMenu === 'home' }"
-        @click="activeMenu = 'home'"
-      >
-        🏠
-      </button>
+  <button
+    class="nav-item"
+    :class="{ active: activeMenu === 'home' }"
+    @click="activeMenu = 'home'"
+  >
+    🏠
+  </button>
 
-      <button
-        class="nav-item"
-        :class="{ active: activeMenu === 'policies' }"
-        @click="loadPolicies"
-      >
-        📄
-      </button>
+  <button
+    class="nav-item"
+    :class="{ active: activeMenu === 'policies' }"
+    @click="loadPolicies"
+  >
+    📄
+  </button>
 
-    </nav>
+  <button
+    class="nav-item"
+    :class="{ active: activeMenu === 'funds' }"
+    @click="loadFunds"
+  >
+    🏦
+  </button>
+
+  <button
+    class="nav-item"
+    :class="{ active: activeMenu === 'finance' }"
+    @click="loadFinance"
+  >
+    💰
+  </button>
+
+</nav>
 
   </div>
 </template>
@@ -146,10 +185,17 @@ const activeMenu = ref("");
 const loading = ref(false);
 const policies = ref([]);
 
-const totalAmount = computed(() => {
+const activePolicies = computed(() => {
+  return policies.value.length; 
+});
+
+const latestPolicyDate = computed(() => {
+  if (!policies.value.length) return "-";
+
   return policies.value
-    .reduce((sum, p) => sum + p.amount, 0)
-    .toLocaleString();
+    .map(p => p.startDate)
+    .sort()
+    .at(-1);
 });
 
 const loadPolicies = () => {
@@ -157,12 +203,11 @@ const loadPolicies = () => {
   loading.value = true;
 
   setTimeout(() => {
-    policies.value = [
-      { id: 1, name: "بیمه زندگی", amount: 5200000, icon: "🧬" },
-      { id: 2, name: "بیمه سرمایه", amount: 3100000, icon: "💰" },
-      { id: 3, name: "بیمه عمر زمانی", amount: 2400000, icon: "⏳" },
-      { id: 4, name: "بیمه مستمری", amount: 4600000, icon: "🏦" },
-      { id: 5, name: "بیمه حوادث", amount: 1800000, icon: "⚠️" },
+    policies.value = [  { id: 1, name: "بیمه زندگی", policyNo: "2202/1403/04", startDate: "1403/04/01", icon: "🧬" },
+  { id: 2, name: "بیمه سرمایه", policyNo: "2202/1403/05", startDate: "1403/04/10", icon: "💰" },
+  { id: 3, name: "بیمه عمر زمانی", policyNo: "2202/1403/06", startDate: "1403/04/15", icon: "⏳" },
+  { id: 4, name: "بیمه مستمری", policyNo: "2202/1403/07", startDate: "1403/04/20", icon: "🏦" },
+  { id: 5, name: "بیمه حوادث", policyNo: "2202/1403/08", startDate: "1403/04/25", icon: "⚠️" },
     ];
 
     loading.value = false;
@@ -183,8 +228,7 @@ const goToInsurance = (id) => {
   display: flex;
   min-height: 100vh;
 
-  font-family: "Vazirmatn", sans-serif;
-
+font-family: "IRANSans", sans-serif;
   background:
     radial-gradient(circle at 20% 20%, #dbeafe 0%, transparent 40%),
     radial-gradient(circle at 80% 80%, #dcfce7 0%, transparent 40%),
@@ -223,7 +267,7 @@ const goToInsurance = (id) => {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 
-  font-family: "Vazirmatn", sans-serif;
+font-family: "IRANSans", sans-serif;
 }
 .sidebar {
   width: 300px;

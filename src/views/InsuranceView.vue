@@ -8,7 +8,7 @@
 
         <div>
           <h1>جزئیات بیمه‌نامه</h1>
-          <p>شناسه: {{ id }}</p>
+          <p>تاریخ شروع بیمه نامه: {{ policy.BeginDate }}</p>
         </div>
       </div>
 
@@ -23,7 +23,7 @@
       <div class="box">
         <div class="box-icon">📄</div>
         <div>
-          <span>شماره بیمه‌نامه</span>
+          <span>شماره بیمه‌نامه :</span>
           <strong>{{ policy.number }}</strong>
         </div>
       </div>
@@ -31,15 +31,15 @@
       <div class="box">
         <div class="box-icon">👤</div>
         <div>
-          <span>بیمه‌گذار</span>
+          <span>بیمه‌گذار :</span>
           <strong>{{ policy.insuredName }}</strong>
         </div>
       </div>
 
       <div class="box">
-        <div class="box-icon">🚗</div>
+        <div class="box-icon">💰</div>
         <div>
-          <span>نوع بیمه</span>
+          <span>نوع بیمه :</span>
           <strong>{{ policy.type }}</strong>
         </div>
       </div>
@@ -55,25 +55,29 @@
     </div>
 
     <!-- ACTION STRIP -->
-    <div class="action-strip">
+<div class="action-strip">
 
-      <button class="btn primary" @click="toggleInstallments">
-        💳 اقساط
-      </button>
+  <button class="btn ghost" @click="toggleInstallments">
+    💳 مشاهده اقساط
+  </button>
 
-      <button class="btn success" @click="depositFund">
-        ⬆ واریز
-      </button>
+  <button class="btn success" @click="depositFund">
+    ⬆️ واریز به اندوخته
+  </button>
 
-      <button class="btn danger" @click="withdrawFund">
-        ⬇ برداشت
-      </button>
+  <button class="btn danger" @click="withdrawFund">
+    ⬇️ برداشت از اندوخته
+  </button>
 
-      <button class="btn ghost" @click="printPolicy">
-        🖨 چاپ
-      </button>
+  <button class="btn info" @click="showFundChart">
+    📊 نمودار اندوخته
+  </button>
 
-    </div>
+  <button class="btn ghost" @click="printPolicy">
+    🖨 چاپ
+  </button>
+
+</div>
 
     <!-- INSTALLMENTS -->
     <div v-if="showInstallments" class="card">
@@ -88,7 +92,7 @@
 
       <!-- ACTION -->
       <div class="installment-actions">
-        <button class="btn primary small" @click="payInstallments">
+        <button class="btn info small" @click="payInstallments">
           💳 پرداخت اقساط
         </button>
       </div>
@@ -113,6 +117,7 @@ const policy = ref({
   insuredName: "علی رضایی",
   type: "زندگی",
   status: "فعال",
+ BeginDate : "1404/09/10",
 
   installments: [
     { id: 1, amount: "1,200,000", dueDate: "1403/02/01", status: "paid" },
@@ -138,6 +143,11 @@ function withdrawFund() {
 
 function printPolicy() {
   console.log("Print Policy");
+}
+
+function showFundChart(){
+    console.log("showFundChart");
+
 }
 </script>
 
@@ -235,7 +245,10 @@ function printPolicy() {
 .success { background: #ecfdf5; color: #047857; }
 .danger { background: #fef2f2; color: #b91c1c; }
 .ghost { background: #f1f5f9; color: #334155; }
-
+.info {
+  background: #e0f2fe;
+  color: #0369a1;
+}
 .btn.small {
   flex: unset;
   padding: 8px 12px;
