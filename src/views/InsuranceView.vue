@@ -1,104 +1,134 @@
 <template>
-  <div class="page">
+  <v-container class="page" fluid>
 
     <!-- HEADER -->
-    <div class="header-card">
-      <div class="header-left">
-        <div class="icon">📄</div>
+    <v-card class="header-card pa-4 mb-4">
+      <v-row align="center" justify="space-between">
 
-        <div>
-          <h1>جزئیات بیمه‌نامه</h1>
-          <p>تاریخ شروع بیمه نامه: {{ policy.BeginDate }}</p>
-        </div>
-      </div>
+        <!-- RIGHT SIDE -->
+        <v-col cols="12" md="8" class="d-flex align-center ga-3">
 
-      <button class="back-btn" @click="$router.back()">
-        ← بازگشت
-      </button>
-    </div>
+          <v-avatar color="primary" size="40">
+            <v-icon>mdi-file-document</v-icon>
+          </v-avatar>
+
+          <div>
+            <div class="text-h6 font-weight-bold">جزئیات بیمه‌نامه</div>
+            <div class="text-caption">
+              تاریخ شروع بیمه نامه: {{ policy.BeginDate }}
+            </div>
+          </div>
+
+        </v-col>
+
+        <!-- BACK BUTTON -->
+        <v-col cols="12" md="4" class="text-md-end text-start">
+      <v-btn variant="tonal" color="primary" @click="$router.back()">
+  بازگشت
+  <v-icon end>mdi-arrow-left</v-icon>
+</v-btn>
+        </v-col>
+
+      </v-row>
+    </v-card>
 
     <!-- SUMMARY -->
-    <div class="summary">
+    <v-row class="mb-4" dense>
 
-      <div class="box">
-        <div class="box-icon">📄</div>
-        <div>
-          <span>شماره بیمه‌نامه :</span>
-          <strong>{{ policy.number }}</strong>
-        </div>
-      </div>
+      <v-col cols="12" sm="6" md="3" v-for="item in summary" :key="item.label">
+        <v-card class="summary-card pa-3">
+          <v-row align="center" no-gutters>
+            <v-col cols="2">
+              <v-icon color="primary">{{ item.icon }}</v-icon>
+            </v-col>
+            <v-col>
+              <div class="text-caption">{{ item.label }}</div>
+              <div class="font-weight-bold">{{ item.value }}</div>
+            </v-col>
+          </v-row>
+        </v-card>
+      </v-col>
 
-      <div class="box">
-        <div class="box-icon">👤</div>
-        <div>
-          <span>بیمه‌گذار :</span>
-          <strong>{{ policy.insuredName }}</strong>
-        </div>
-      </div>
+    </v-row>
 
-      <div class="box">
-        <div class="box-icon">💰</div>
-        <div>
-          <span>نوع بیمه :</span>
-          <strong>{{ policy.type }}</strong>
-        </div>
-      </div>
+    <!-- ACTION BAR -->
+    <v-card class="pa-3 mb-4 action-bar">
+      <v-row dense>
 
-      <div class="box">
-        <div class="box-icon">📌</div>
-        <div>
-          <span>وضعیت</span>
-          <strong class="status">{{ policy.status }}</strong>
-        </div>
-      </div>
+        <v-col cols="6" md="2">
+          <v-btn block variant="tonal" @click="toggleInstallments">
+            اقساط
+          </v-btn>
+        </v-col>
 
-    </div>
+        <v-col cols="6" md="2">
+          <v-btn block color="success" variant="tonal" @click="depositFund">
+            واریز
+          </v-btn>
+        </v-col>
 
-    <!-- ACTION STRIP -->
-<div class="action-strip">
+        <v-col cols="6" md="2">
+          <v-btn block color="error" variant="tonal" @click="withdrawFund">
+            برداشت
+          </v-btn>
+        </v-col>
 
-  <button class="btn ghost" @click="toggleInstallments">
-    💳 مشاهده اقساط
-  </button>
+        <v-col cols="6" md="2">
+          <v-btn block color="info" variant="tonal" @click="showFundChart">
+            نمودار
+          </v-btn>
+        </v-col>
 
-  <button class="btn success" @click="depositFund">
-    ⬆️ واریز به اندوخته
-  </button>
+        <v-col cols="12" md="2">
+          <v-btn block variant="tonal" @click="printPolicy">
+            چاپ
+          </v-btn>
+        </v-col>
 
-  <button class="btn danger" @click="withdrawFund">
-    ⬇️ برداشت از اندوخته
-  </button>
-
-  <button class="btn info" @click="showFundChart">
-    📊 نمودار اندوخته
-  </button>
-
-  <button class="btn ghost" @click="printPolicy">
-    🖨 چاپ
-  </button>
-
-</div>
+      </v-row>
+    </v-card>
 
     <!-- INSTALLMENTS -->
-    <div v-if="showInstallments" class="card">
-      <h3>اقساط</h3>
+    <v-card v-if="showInstallments" class="pa-4">
 
-      <div v-for="item in policy.installments" :key="item.id" class="row">
-        <div>#{{ item.id }}</div>
-        <div>{{ item.amount }}</div>
-        <div>{{ item.dueDate }}</div>
-        <div>{{ item.status }}</div>
+      <div class="text-h6 mb-3">اقساط</div>
+
+      <v-table>
+        <thead>
+          <tr>
+            <th>ردیف</th>
+            <th>مبلغ</th>
+            <th>سررسید</th>
+            <th>وضعیت</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr v-for="item in policy.installments" :key="item.id">
+            <td>{{ item.id }}</td>
+            <td>{{ item.amount }}</td>
+            <td>{{ item.dueDate }}</td>
+            <td>
+              <v-chip
+                :color="item.status === 'paid' ? 'green' : 'red'"
+                size="small"
+              >
+                {{ item.status }}
+              </v-chip>
+            </td>
+          </tr>
+        </tbody>
+      </v-table>
+
+      <div class="text-end mt-4">
+        <v-btn color="info" variant="tonal" @click="payInstallments">
+          پرداخت اقساط
+        </v-btn>
       </div>
 
-      <!-- ACTION -->
-      <div class="installment-actions">
-        <button class="btn info small" @click="payInstallments">
-          💳 پرداخت اقساط
-        </button>
-      </div>
-    </div>
+    </v-card>
 
-  </div>
+  </v-container>
 </template>
 
 <script setup>
@@ -108,8 +138,6 @@ import { useRoute, useRouter } from "vue-router";
 const route = useRoute();
 const router = useRouter();
 
-const id = route.params.id;
-
 const showInstallments = ref(false);
 
 const policy = ref({
@@ -117,7 +145,7 @@ const policy = ref({
   insuredName: "علی رضایی",
   type: "زندگی",
   status: "فعال",
- BeginDate : "1404/09/10",
+  BeginDate: "1404/09/10",
 
   installments: [
     { id: 1, amount: "1,200,000", dueDate: "1403/02/01", status: "paid" },
@@ -125,197 +153,53 @@ const policy = ref({
   ]
 });
 
+const summary = [
+  { label: "شماره بیمه‌نامه", value: policy.value.number, icon: "mdi-file" },
+  { label: "بیمه‌گذار", value: policy.value.insuredName, icon: "mdi-account" },
+  { label: "نوع بیمه", value: policy.value.type, icon: "mdi-shield" },
+  { label: "وضعیت", value: policy.value.status, icon: "mdi-check-circle" }
+];
+
 function toggleInstallments() {
   showInstallments.value = !showInstallments.value;
 }
 
-function payInstallments() {
-  console.log("pay installments");
-}
-
-function depositFund() {
-  console.log("deposit fund");
-}
-
-function withdrawFund() {
-  console.log("withdraw fund");
-}
-
-function printPolicy() {
-  console.log("Print Policy");
-}
-
-function showFundChart(){
-    console.log("showFundChart");
-
-}
+function payInstallments() {}
+function depositFund() {}
+function withdrawFund() {}
+function printPolicy() {}
+function showFundChart() {}
 </script>
 
-<style>
+<style scoped>
 .page {
-  padding: 16px;
-  background: #f4f6fb;
-  font-family: system-ui;
+  background: #f4f7fb;
+  direction: rtl;
+  font-family: "IRANYekan", sans-serif;
 }
 
-/* ================= HEADER ================= */
+/* HEADER */
 .header-card {
-  background: white;
-  padding: 14px;
-  border-radius: 12px;
-  margin-bottom: 12px;
-
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  position: relative;
+  border-radius: 16px;
 }
 
-.header-left {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-/* BACK BUTTON */
-.back-btn {
-  background: #f1f5f9;
-  border: 1px solid #e2e8f0;
-  padding: 8px 14px;
-  border-radius: 10px;
-  cursor: pointer;
-  font-weight: 600;
-  color: #334155;
-  transition: 0.2s;
-}
-
-.back-btn:hover {
-  background: #e2e8f0;
-  transform: translateY(-1px);
-}
-
-/* ================= SUMMARY ================= */
-.summary {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
-}
-
-.box {
-  background: white;
-  padding: 12px;
-  border-radius: 12px;
-}
-
-/* ================= ACTION STRIP ================= */
-.action-strip {
-  display: flex;
-  gap: 10px;
-
-  background: white;
-  padding: 12px;
+/* SUMMARY */
+.summary-card {
   border-radius: 14px;
-
-  margin: 12px 0;
-
-  box-shadow: 0 6px 16px rgba(0,0,0,0.05);
-
-  justify-content: space-between;
-}
-
-.btn {
-  flex: 1;
-  padding: 10px;
-  border-radius: 10px;
-  border: none;
-
-  font-weight: 600;
-  cursor: pointer;
-
   transition: 0.2s;
 }
 
-.btn:hover {
+.summary-card:hover {
   transform: translateY(-2px);
 }
 
-/* COLORS */
-.primary { background: #2563eb; color: white; }
-.success { background: #ecfdf5; color: #047857; }
-.danger { background: #fef2f2; color: #b91c1c; }
-.ghost { background: #f1f5f9; color: #334155; }
-.info {
-  background: #e0f2fe;
-  color: #0369a1;
-}
-.btn.small {
-  flex: unset;
-  padding: 8px 12px;
-  font-size: 13px;
-  border-radius: 8px;
+/* ACTION BAR */
+.action-bar {
+  border-radius: 14px;
 }
 
-/* ================= CARD ================= */
-.card {
-  background: white;
-  padding: 14px;
-  border-radius: 12px;
-  margin-top: 12px;
-}
-
-/* ROW */
-.row {
-  display: grid;
-  grid-template-columns: 60px 1fr 1fr 100px;
-  padding: 10px 0;
-  border-bottom: 1px solid #eee;
-}
-
-/* ================= INSTALLMENT ACTION ================= */
-.installment-actions {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 12px;
-}
-
-/* ================= MOBILE ================= */
-@media (max-width: 768px) {
-
-  /* SUMMARY */
-  .summary {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  /* ACTION STRIP */
-  .action-strip {
-    flex-wrap: wrap;
-  }
-
-  .btn {
-    flex: 1 1 45%;
-  }
-
-  /* ROW */
-  .row {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  /* HEADER FIX (ONLY MOBILE) */
-  .header-card {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-  }
-
-  .back-btn {
-    position: absolute;
-    top: 12px;
-    left: 12px;
-
-    padding: 6px 10px;
-    font-size: 12px;
-    border-radius: 8px;
-  }
+/* TABLE RTL FIX */
+.v-table {
+  direction: rtl;
 }
 </style>

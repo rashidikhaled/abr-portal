@@ -7,27 +7,45 @@ const routes = [
   },
 
   {
-    path: "/register",
-    name: "register",
-    component: () => import("../views/RegisterView.vue"),
-    meta: { requiresAuth: true },
-  },
-   {
-    path: "/Home",
-    name: "Home",
-    component: () => import("../views/HomeView.vue"),
-    meta: { requiresAuth: true },
-  },
-  {
-    path: "/insurance",
-    name: "insurance",
-    component: () => import("../views/InsuranceView.vue"),
-  },
-  {
     path: "/auth",
     name: "auth",
     component: () => import("../views/AuthView.vue"),
     meta: { guestOnly: true },
+  },
+
+  {
+    path: "/Register",
+    name: "Register",
+    component: () => import("../views/RegisterView.vue"),
+    meta: { guestOnly: true },
+  },
+
+  {
+    path: "/",
+    component: () => import("../layouts/MainLayout.vue"),
+    meta: { requiresAuth: true },
+    children: [
+      {
+        path: "Home",
+        name: "Home",
+        component: () => import("../views/HomeView.vue"),
+      },
+      {
+        path: "Funds",
+        name: "Funds",
+        component: () => import("../views/FundView.vue"),
+      },
+      {
+        path: "Finance",
+        name: "Finance",
+        component: () => import("../views/FinanceView.vue"),
+      },
+      {
+        path: "insurance",
+        name: "insurance",
+        component: () => import("../views/InsuranceView.vue"),
+      },
+    ],
   },
 
   {
@@ -41,19 +59,5 @@ const router = createRouter({
   history: createWebHistory(),
   routes,
 });
-
-// router.beforeEach((to) => {
-//   const token = localStorage.getItem("token");
-
-//   if (to.meta.requiresAuth && !token) {
-//     return "/auth";
-//   }
-
-//   if (to.meta.guestOnly && token) {
-//     return "/auth";
-//   }
-
-//   return true;
-// });
 
 export default router;

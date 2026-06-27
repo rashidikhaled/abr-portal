@@ -2,20 +2,31 @@
    FONTS
 ========================= */
 
-/* Vazirmatn / IRANYekan */
+/* IRANYekan Regular */
 @font-face {
-  font-family: "Vazirmatn";
-  src: url("./fonts/IRANYekanRegular.woff2") format("woff2"),
-       url("./fonts/IRANYekanRegular.ttf") format("truetype");
+  font-family: "IRANYekan";
+  src:
+       url("@/assets/fonts/IRANYekanBold.ttf") format("truetype");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 
+/* IRANYekan Bold */
 @font-face {
-  font-family: "Vazirmatn";
-  src: url("./fonts/IRANYekanBold.woff2") format("woff2"),
-       url("./fonts/IRANYekanBold.ttf") format("truetype");
+  font-family: "IRANYekan";
+  src: 
+       url("@/assets/fonts/IRANYekanLight.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* DigiTitr */
+@font-face {
+  font-family: "DigiTitrPlusBoldLine";
+  src: url("@/assets/fonts/materialdesignicons-webfont.woff2") format("woff2"),
+       url("@/assets/fonts/materialdesignicons-webfont.ttf") format("truetype");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -24,15 +35,12 @@
 /* Material Design Icons */
 @font-face {
   font-family: "Material Design Icons";
-  src: url("./fonts/materialdesignicons-webfont.woff2") format("woff2"),
-       url("./fonts/materialdesignicons-webfont.woff") format("woff"),
-       url("./fonts/materialdesignicons-webfont.ttf") format("truetype");
+  src: url("@/assets/fonts/materialdesignicons-webfont.woff2") format("woff2"),
+       url("@/assets/fonts/materialdesignicons-webfont.woff") format("woff"),
+       url("@/assets/fonts/materialdesignicons-webfont.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
 }
 
-/* ICON BASE */
-.mdi:before {
-  font-family: "Material Design Icons" !important;
-}
+

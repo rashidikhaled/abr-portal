@@ -4,38 +4,37 @@
 
       <!-- FORM -->
       <div class="register-card">
-
         <h1>ایجاد حساب کاربری</h1>
         <p>اطلاعات خود را کامل کنید</p>
 
-        <div class="field">
-          <label>شماره موبایل</label>
-          <input v-model="form.mobile" type="text" placeholder="09123456789" />
-        </div>
+        <v-text-field
+          v-model="form.mobile"
+          label="شماره موبایل"
+          variant="outlined"
+          density="comfortable"
+          prepend-inner-icon="mdi-phone"
+        />
 
-        <div class="field">
-          <label>کد ملی</label>
-          <input v-model="form.nationalId" type="text" placeholder="کد ملی" />
-        </div>
+        <v-text-field
+          v-model="form.nationalId"
+          label="کد ملی"
+          variant="outlined"
+          density="comfortable"
+          prepend-inner-icon="mdi-card-account-details"
+        />
 
-        <div class="field">
-          <label>تاریخ تولد</label>
-
-          <date-picker
-            class="date-picker"
-            v-model="form.birthDate"
-            format="jYYYY/jMM/jDD"
-            display-format="jYYYY/jMM/jDD"
-            type="date"
-            color="#3b82f6"
-            simple
-          />
-        </div>
+        <v-text-field
+          v-model="form.birthDate"
+          label="تاریخ تولد"
+          type="date"
+          variant="outlined"
+          density="comfortable"
+          prepend-inner-icon="mdi-calendar"
+        />
 
         <button class="btn" @click="submit">
           ثبت نام
         </button>
-
       </div>
 
       <!-- GUIDE -->
@@ -43,22 +42,32 @@
         <h2>راهنمای ثبت نام</h2>
 
         <div class="guide-item">
-          <h3>📱 شماره موبایل</h3>
-          <p>برای ورود امن و ارسال کد تایید استفاده می‌شود.</p>
+          <v-icon icon="mdi-phone" />
+          <div>
+            <h3>شماره موبایل</h3>
+            <p>برای ورود امن و ارسال کد تایید استفاده می‌شود.</p>
+          </div>
         </div>
 
         <div class="guide-item">
-          <h3>🆔 کد ملی</h3>
-          <p>برای احراز هویت و جلوگیری از حساب‌های تکراری.</p>
+          <v-icon icon="mdi-card-account-details" />
+          <div>
+            <h3>کد ملی</h3>
+            <p>برای احراز هویت و جلوگیری از حساب‌های تکراری.</p>
+          </div>
         </div>
 
         <div class="guide-item">
-          <h3>🎂 تاریخ تولد</h3>
-          <p>برای تکمیل پروفایل و شخصی‌سازی خدمات.</p>
+          <v-icon icon="mdi-calendar" />
+          <div>
+            <h3>تاریخ تولد</h3>
+            <p>برای تکمیل پروفایل و شخصی‌سازی خدمات.</p>
+          </div>
         </div>
 
         <div class="guide-note">
-          اطلاعات شما محرمانه است و فقط برای احراز هویت استفاده می‌شود.
+          <v-icon icon="mdi-shield-lock" />
+          اطلاعات شما محرمانه است
         </div>
 
       </div>
@@ -69,7 +78,6 @@
 
 <script setup>
 import { reactive } from "vue";
-import DatePicker from "vue3-persian-datetime-picker";
 
 const form = reactive({
   mobile: "",
@@ -82,23 +90,20 @@ const submit = () => {
 };
 </script>
 
-
 <style>
-
+/* RESET */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-
-/* BACKGROUND */
+/* PAGE BACKGROUND */
 .register-page {
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-
   padding: 40px 20px;
 
   background:
@@ -107,21 +112,20 @@ const submit = () => {
     linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
 }
 
-/* LAYOUT */
+/* MAIN LAYOUT */
 .register-layout {
   width: 100%;
   max-width: 1100px;
-
   display: flex;
   gap: 18px;
 }
 
-/* FORM CARD */
+/* LEFT FORM CARD */
 .register-card {
   flex: 1;
 
-  background: rgba(255, 255, 255, 0.82);
-  backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(18px);
 
   padding: 38px;
 
@@ -131,12 +135,12 @@ const submit = () => {
 
   box-shadow:
     0 20px 60px rgba(15, 23, 42, 0.08),
-    0 40px 120px rgba(37, 99, 235, 0.08);
+    0 40px 120px rgba(37, 99, 235, 0.06);
 
   text-align: right;
 }
 
-/* GUIDE PANEL */
+/* RIGHT PANEL */
 .guide-panel {
   width: 340px;
 
@@ -153,61 +157,28 @@ const submit = () => {
   overflow: hidden;
 }
 
+/* decorative circle */
 .guide-panel::before {
   content: "";
   position: absolute;
 
-  width: 300px;
-  height: 300px;
+  width: 280px;
+  height: 280px;
 
   border-radius: 50%;
 
   top: -120px;
   right: -120px;
 
-  background: rgba(255,255,255,0.10);
+  background: rgba(255, 255, 255, 0.10);
 }
 
-.guide-panel h2 {
-  font-size: 18px;
-  font-weight: 800;
-  margin-bottom: 22px;
-}
-
-.guide-item {
-  margin-bottom: 18px;
-}
-
-.guide-item h3 {
-  font-size: 14px;
-  margin-bottom: 6px;
-}
-
-.guide-item p {
-  font-size: 13px;
-  color: rgba(255,255,255,0.85);
-  line-height: 1.7;
-}
-
-.guide-note {
-  margin-top: 22px;
-
-  font-size: 12px;
-
-  padding: 12px;
-
-  border-radius: 14px;
-
-  background: rgba(255,255,255,0.12);
-}
-
-/* TITLE */
+/* TITLES */
 h1 {
   font-size: 26px;
   font-weight: 800;
 
   background: linear-gradient(135deg, #0f172a, #1d4ed8);
-  -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 
   margin-bottom: 6px;
@@ -219,58 +190,67 @@ p {
   margin-bottom: 26px;
 }
 
-/* FIELD */
-.field {
+/* GUIDE TITLE */
+.guide-panel h2 {
+  font-size: 18px;
+  font-weight: 800;
+  margin-bottom: 22px;
+}
+
+/* GUIDE ITEM */
+.guide-item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+
   margin-bottom: 18px;
 }
 
-label {
-  display: block;
-  font-size: 13px;
-  font-weight: 600;
-  margin-bottom: 8px;
-  color: #475569;
-}
-
-/* INPUT */
-input {
-  width: 100%;
-  height: 54px;
-
-  border-radius: 16px;
-
-  border: 1px solid #d6dbe6;
-
-  background: #f8fafc;
-
-  padding: 0 16px;
-
+.guide-item h3 {
   font-size: 14px;
-
-  transition: all 0.25s ease;
+  margin-bottom: 6px;
 }
 
-input:focus {
-  outline: none;
-
-  border-color: #3b82f6;
-
-  background: #fff;
-
-  box-shadow: 0 0 0 4px rgba(59,130,246,0.12);
+.guide-item p {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.7;
+  margin: 0;
 }
 
-/* DATEPICKER */
-.date-picker {
-  width: 100%;
+/* GUIDE NOTE */
+.guide-note {
+  margin-top: 22px;
+
+  font-size: 12px;
+
+  padding: 12px;
+
+  border-radius: 14px;
+
+  background: rgba(255, 255, 255, 0.12);
+
+  display: flex;
+  gap: 8px;
+  align-items: center;
 }
 
-/* BUTTON */
+/* INPUTS (Vuetify fix) */
+.v-text-field {
+  margin-bottom: 18px;
+}
+
+/* fix outline radius */
+.v-field {
+  border-radius: 16px !important;
+}
+
+/* BUTTON (custom button) */
 .btn {
   width: 100%;
   height: 54px;
 
-  margin-top: 16px;
+  margin-top: 10px;
 
   border: none;
   border-radius: 16px;
