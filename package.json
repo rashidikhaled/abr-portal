@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "portal-sarmad" : "SET VUE_API_SERVER=https://portal-sarmad.karestanjavan.ir && vite",
     "build": "vite build",
     "preview": "vite preview"
   },

@@ -9,7 +9,7 @@
 
             <div class="header-section">
               <img src="@/assets/image/logosarmad.png" class="main-logo" />
-              <h1 class="title">پورتال بیمه سرمد</h1>
+              <h2 class="title">پورتال بیمه سرمد</h2>
             </div>
 
             <v-text-field

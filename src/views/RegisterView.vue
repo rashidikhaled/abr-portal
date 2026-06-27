@@ -4,33 +4,16 @@
 
       <!-- FORM -->
       <div class="register-card">
-        <h1>ایجاد حساب کاربری</h1>
         <p>اطلاعات خود را کامل کنید</p>
 
-        <v-text-field
-          v-model="form.mobile"
-          label="شماره موبایل"
-          variant="outlined"
-          density="comfortable"
-          prepend-inner-icon="mdi-phone"
-        />
+        <v-text-field v-model="form.mobile" label="شماره موبایل" variant="outlined" density="comfortable"
+          prepend-inner-icon="mdi-phone" />
 
-        <v-text-field
-          v-model="form.nationalId"
-          label="کد ملی"
-          variant="outlined"
-          density="comfortable"
-          prepend-inner-icon="mdi-card-account-details"
-        />
+        <v-text-field v-model="form.nationalId" label="کد ملی" variant="outlined" density="comfortable"
+          prepend-inner-icon="mdi-card-account-details" />
 
-        <v-text-field
-          v-model="form.birthDate"
-          label="تاریخ تولد"
-          type="date"
-          variant="outlined"
-          density="comfortable"
-          prepend-inner-icon="mdi-calendar"
-        />
+        <v-text-field v-model="form.birthDate" label="تاریخ تولد" type="date" variant="outlined" density="comfortable"
+          prepend-inner-icon="mdi-calendar" />
 
         <button class="btn" @click="submit">
           ثبت نام
@@ -78,7 +61,6 @@
 
 <script setup>
 import { reactive } from "vue";
-
 const form = reactive({
   mobile: "",
   nationalId: "",
