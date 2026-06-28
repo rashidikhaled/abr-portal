@@ -1,21 +1,39 @@
 <template>
   <div class="register-page">
     <div class="register-layout">
-
       <!-- FORM -->
       <div class="register-card">
         <p>اطلاعات خود را کامل کنید</p>
 
-        <v-text-field v-model="form.mobile" label="شماره موبایل" variant="outlined" density="comfortable"
-          prepend-inner-icon="mdi-phone" />
+        <v-text-field
+          v-model="form.MobileNo"
+          label="شماره موبایل"
+          variant="outlined"
+          density="comfortable"
+          prepend-inner-icon="mdi-phone"
+        />
 
-        <v-text-field v-model="form.nationalId" label="کد ملی" variant="outlined" density="comfortable"
-          prepend-inner-icon="mdi-card-account-details" />
+        <v-text-field
+          v-model="form.NationalCode"
+          label="کد ملی"
+          variant="outlined"
+          density="comfortable"
+          prepend-inner-icon="mdi-card-account-details"
+        />
 
-        <v-text-field v-model="form.birthDate" label="تاریخ تولد" type="date" variant="outlined" density="comfortable"
-          prepend-inner-icon="mdi-calendar" />
+        <v-text-field
+          v-model="form.DateOfBirth"
+          label="تاریخ تولد"
+          type="date"
+          variant="outlined"
+          density="comfortable"
+          prepend-inner-icon="mdi-calendar"
+        />
 
-        <button class="btn" @click="submit">
+        <button
+          class="btn"
+          @click="submit"
+        >
           ثبت نام
         </button>
       </div>
@@ -52,23 +70,45 @@
           <v-icon icon="mdi-shield-lock" />
           اطلاعات شما محرمانه است
         </div>
-
       </div>
-
     </div>
   </div>
 </template>
 
 <script setup>
 import { reactive } from "vue";
+import { useRouter } from "vue-router";
+import { register } from "@/api/authApi";
+
+const router = useRouter();
+
 const form = reactive({
-  mobile: "",
-  nationalId: "",
-  birthDate: ""
+  MobileNo: "",
+  NationalCode: "",
+  DateOfBirth: "",
 });
 
-const submit = () => {
-  console.log("REGISTER:", form);
+const submit = async () => {
+  try {
+    const response = await register(form);
+
+    console.log("ثبت‌نام موفق:", response.data);
+
+    // پیام موفقیت به کاربر
+    alert("ثبت‌نام با موفقیت انجام شد! حالا وارد شوید.");
+
+    // هدایت به صفحه لاگین
+    router.push({
+      name: "auth",
+      query: { mobile: form.mobile, nationalId: form.nationalId },
+    });
+  } catch (error) {
+    console.log("خطا در ثبت‌نام:", error.response?.data || error);
+    alert(
+      error.response?.data?.message ||
+        "ثبت‌نام ناموفق بود. لطفاً دوباره تلاش کنید.",
+    );
+  }
 };
 </script>
 
@@ -152,7 +192,7 @@ const submit = () => {
   top: -120px;
   right: -120px;
 
-  background: rgba(255, 255, 255, 0.10);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 /* TITLES */

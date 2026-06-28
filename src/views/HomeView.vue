@@ -1,114 +1,83 @@
 <template>
-<v-container fluid class="policy-container pa-6">
-
-  <v-row dense>
-    <v-col
-      v-for="item in policies"
-      :key="item.id"
-      cols="12"
-      sm="6"
-      md="4"
-      lg="3"
-    >
-
-      <v-card
-        class="policy-card pa-5"
-        elevation="0"
-        @click="goToInsurance(item.id)"
+  <v-container
+    fluid
+    class="policy-container pa-6"
+  >
+    <v-row dense>
+      <v-col
+        v-for="item in policies"
+        :key="item.id"
+        cols="12"
+        sm="6"
+        md="4"
+        lg="3"
       >
+        <v-card
+          class="policy-card pa-5"
+          elevation="0"
+          @click="goToInsurance(item.id)"
+        >
+          <!-- HEADER -->
+          <div class="card-header">
+            <div class="icon-box">
+              <v-icon
+                size="22"
+                color="#2563eb"
+              >
+                {{ item.icon }}
+              </v-icon>
+            </div>
 
-        <!-- HEADER -->
-        <div class="card-header">
-
-          <div class="icon-box">
-            <v-icon size="22" color="#2563eb">
-              {{ item.icon }}
-            </v-icon>
+            <v-chip
+              size="x-small"
+              class="status"
+            >
+              فعال
+            </v-chip>
           </div>
 
-          <v-chip size="x-small" class="status">
-            فعال
-          </v-chip>
-
-        </div>
-
-        <!-- TITLE -->
-        <div class="title">
-          {{ item.name }}
-        </div>
-
-        <!-- INFO -->
-        <div class="info">
-          <div class="row">
-            <span class="label">شماره</span>
-            <span class="value">{{ item.policyNo }}</span>
+          <!-- TITLE -->
+          <div class="title">
+            {{ item.name }}
           </div>
 
-          <div class="row">
-            <span class="label">شروع</span>
-            <span class="value">{{ item.startDate }}</span>
+          <!-- INFO -->
+          <div class="info">
+            <div class="row">
+              <span class="label">شماره</span>
+              <span class="value">{{ item.PolicyNo }}</span>
+            </div>
+
+            <div class="row">
+              <span class="label">شروع</span>
+              <span class="value">{{ item.BeginDate }}</span>
+            </div>
           </div>
-        </div>
-
-      </v-card>
-
-    </v-col>
-  </v-row>
-
-</v-container>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { useRouter } from "vue-router";
+import { useRoute } from "vue-router";
+import { getPolicyListByNationalNo } from "@/api/authApi";
 
-const router = useRouter();
+const route = useRoute();
 
-const loading = ref(false);
 const policies = ref([]);
 
-const loadPolicies = () => {
-  loading.value = true;
+const loadPolicies = async () => {
+  const nationalId = route.query.nationalId;
 
-  setTimeout(() => {
-    policies.value =
-[
-  {
-    id: 1,
-    name: "بیمه زندگی",
-    policyNo: "2202/1403/04",
-    startDate: "1403/04/01",
-    icon: "mdi-heart-pulse"
-  },
-  {
-    id: 2,
-    name: "بیمه سرمایه",
-    policyNo: "2202/1403/05",
-    startDate: "1403/04/10",
-    icon: "mdi-cash"
-  },
-  {
-    id: 3,
-    name: "بیمه عمر زمانی",
-    policyNo: "2202/1403/06",
-    startDate: "1403/04/15",
-    icon: "mdi-timer-sand"
-  },
-  {
-    id: 4,
-    name: "بیمه مستمری",
-    policyNo: "2202/1403/07",
-    startDate: "1403/04/20",
-    icon: "mdi-bank"
-  }
-]
+  const res = await getPolicyListByNationalNo(nationalId);
 
-    loading.value = false;
-  }, 500);
+  policies.value = res.data;
 };
 
 const goToInsurance = (id) => {
-  router.push({ path: "/insurance", query: { id } });
+  console.log(id);
 };
 
 onMounted(loadPolicies);

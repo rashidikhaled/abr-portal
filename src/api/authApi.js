@@ -5,5 +5,11 @@ export const login = (data) => {
 };
 
 export const register = (data) => {
-  return api.post("/register", data);
+  return api.post("Auth/register", data);
 };
+
+export async function getPolicyListByNationalNo(nationalNo) {
+  return api.post("/Policy/GetPolicyListByNationalNo", {
+    NationalNo: nationalNo,
+  });
+}

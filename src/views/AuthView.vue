@@ -92,9 +92,13 @@ const form = reactive({
 const goRegister = () => {
   router.push({ name: "Register" });
 };
-
 const goHome = () => {
-  router.push({ name: "Home" });
+  router.push({
+    name: "Home",
+    query: {
+      nationalId: form.nationalId
+    }
+  });
 };
 
 const sendCode = () => {
