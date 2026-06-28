@@ -3,39 +3,23 @@
     <div class="register-layout">
       <!-- FORM -->
       <div class="register-card">
-        <p>اطلاعات خود را کامل کنید</p>
+        <h2 class="mb-2">ثبت نام</h2>
+        <p class="mb-6">اطلاعات خود را کامل کنید</p>
 
-        <v-text-field
-          v-model="form.MobileNo"
-          label="شماره موبایل"
-          variant="outlined"
-          density="comfortable"
-          prepend-inner-icon="mdi-phone"
-        />
+        <form @submit.prevent="submit">
+          <v-text-field v-model="MobileNo" label="شماره موبایل" variant="outlined" density="comfortable"
+            prepend-inner-icon="mdi-phone" maxlength="11" :error-messages="errors.MobileNo" />
 
-        <v-text-field
-          v-model="form.NationalCode"
-          label="کد ملی"
-          variant="outlined"
-          density="comfortable"
-          prepend-inner-icon="mdi-card-account-details"
-        />
+          <v-text-field v-model="NationalCode" label="کد ملی" variant="outlined" density="comfortable"
+            prepend-inner-icon="mdi-card-account-details" maxlength="10" :error-messages="errors.NationalCode" />
 
-        <v-text-field
-          v-model="form.DateOfBirth"
-          label="تاریخ تولد"
-          type="date"
-          variant="outlined"
-          density="comfortable"
-          prepend-inner-icon="mdi-calendar"
-        />
+          <v-text-field v-model="DateOfBirth" label="تاریخ تولد" type="date" variant="outlined" density="comfortable"
+            prepend-inner-icon="mdi-calendar" :error-messages="errors.DateOfBirth" />
 
-        <button
-          class="btn"
-          @click="submit"
-        >
-          ثبت نام
-        </button>
+          <v-btn type="submit" color="primary" block size="large" :loading="isSubmitting" :disabled="isSubmitting">
+            ثبت نام
+          </v-btn>
+        </form>
       </div>
 
       <!-- GUIDE -->
@@ -68,48 +52,88 @@
 
         <div class="guide-note">
           <v-icon icon="mdi-shield-lock" />
-          اطلاعات شما محرمانه است
+          اطلاعات شما محرمانه است.
         </div>
       </div>
     </div>
+
+    <v-snackbar v-model="snackbar.show" :color="snackbar.color" timeout="3000">
+      {{ snackbar.text }}
+    </v-snackbar>
   </div>
 </template>
 
 <script setup>
-import { reactive } from "vue";
 import { useRouter } from "vue-router";
+import { useForm } from "vee-validate";
+import * as yup from "yup";
 import { register } from "@/api/authApi";
+import { ref } from "vue";
+import { isValidNationalCode } from "../utils/validators";
 
 const router = useRouter();
 
-const form = reactive({
-  MobileNo: "",
-  NationalCode: "",
-  DateOfBirth: "",
+const snackbar = ref({
+  show: false,
+  text: "",
+  color: "success",
 });
 
-const submit = async () => {
+
+
+const schema = yup.object({
+  MobileNo: yup
+    .string()
+    .required("شماره موبایل الزامی است")
+    .matches(/^09\d{9}$/, "شماره موبایل معتبر نیست"),
+
+  NationalCode: yup
+    .string()
+    .required("کد ملی الزامی است")
+    .test(
+      "national-code",
+      "کد ملی معتبر نیست",
+      value => isValidNationalCode(value ?? "")
+    ),
+
+  DateOfBirth: yup.string().required("تاریخ تولد الزامی است"),
+});
+
+const { defineField, errors, handleSubmit, isSubmitting } = useForm({
+  validationSchema: schema,
+});
+
+const [MobileNo] = defineField("MobileNo");
+const [NationalCode] = defineField("NationalCode");
+const [DateOfBirth] = defineField("DateOfBirth");
+
+const submit = handleSubmit(async (values) => {
   try {
-    const response = await register(form);
+    await register(values);
 
-    console.log("ثبت‌نام موفق:", response.data);
+    snackbar.value = {
+      show: true,
+      text: "ثبت نام با موفقیت انجام شد.",
+      color: "success",
+    };
 
-    // پیام موفقیت به کاربر
-    alert("ثبت‌نام با موفقیت انجام شد! حالا وارد شوید.");
-
-    // هدایت به صفحه لاگین
-    router.push({
-      name: "auth",
-      query: { mobile: form.mobile, nationalId: form.nationalId },
-    });
+    setTimeout(() => {
+      router.push({
+        name: "auth",
+        query: {
+          mobile: values.MobileNo,
+          nationalCode: values.NationalCode,
+        },
+      });
+    }, 1000);
   } catch (error) {
-    console.log("خطا در ثبت‌نام:", error.response?.data || error);
-    alert(
-      error.response?.data?.message ||
-        "ثبت‌نام ناموفق بود. لطفاً دوباره تلاش کنید.",
-    );
+    snackbar.value = {
+      show: true,
+      text: error.response?.data?.message ?? "ثبت نام انجام نشد.",
+      color: "error",
+    };
   }
-};
+});
 </script>
 
 <style>

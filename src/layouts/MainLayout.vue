@@ -73,20 +73,21 @@
 
             <!-- KPI -->
             <div class="kpi-box">
-              <v-card class="kpi">
-                <div class="num">12</div>
-                <div class="label">بیمه‌نامه</div>
-              </v-card>
+        <v-card class="kpi">
+<div class="num">{{ totalPolicies }}</div>
+              <div class="label">تعداد کل  </div>
+            </v-card>
 
-              <v-card class="kpi">
-                <div class="num green">8</div>
-                <div class="label">فعال</div>
-              </v-card>
+            <v-card class="kpi">
+              <div class="num green">{{ activePolicies }}</div>
+              <div class="label">بیمه نام دائم </div>
+            </v-card>
 
-              <v-card class="kpi">
-                <div class="num orange">3</div>
-                <div class="label">مالی</div>
-              </v-card>
+            <v-card class="kpi">
+<div class="num orange">{{ canceledPolicies }}</div>
+              <div class="label">بیمه نامه
+                ابطال شده</div>
+            </v-card>
             </div>
 
           </div>
@@ -106,19 +107,22 @@
           </v-card>
 
           <div class="mobile-kpis">
+       
+
             <v-card class="kpi">
-              <div class="num">12</div>
-              <div class="label">بیمه‌نامه</div>
+<div class="num">{{ totalPolicies }}</div>
+              <div class="label">تعداد کل  </div>
             </v-card>
 
             <v-card class="kpi">
-              <div class="num green">8</div>
-              <div class="label">فعال</div>
+              <div class="num green">{{ activePolicies }}</div>
+              <div class="label">بیمه نام دائم </div>
             </v-card>
 
             <v-card class="kpi">
-              <div class="num orange">3</div>
-              <div class="label">مالی</div>
+<div class="num orange">{{ canceledPolicies }}</div>
+              <div class="label">بیمه نامه
+                ابطال شده</div>
             </v-card>
           </div>
 
@@ -160,14 +164,27 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useRouter, useRoute } from "vue-router";
+import { usePolicyStore } from "@/stores/policyStore";
 
 const drawer = ref(true);
 const tab = ref(null);
 
 const router = useRouter();
 const route = useRoute();
+
+const policyStore = usePolicyStore();
+
+const totalPolicies = computed(() => policyStore.policies.length);
+
+const activePolicies = computed(() =>
+  policyStore.policies.filter(item => item.StatusID == "23020205").length
+);
+
+const canceledPolicies = computed(() =>
+  policyStore.policies.filter(item => item.StatusID == "23020204").length
+);
 
 const menu = [
   { path: "/Home", icon: "mdi-home", title: "خانه" },
@@ -176,13 +193,13 @@ const menu = [
 ];
 
 const go = (p) => router.push(p);
+
 const isActive = (p) => route.path === p;
 
 const logout = () => {
   router.push("/auth");
 };
 </script>
-
 <style scoped>
 /* ======================
    BASE LAYOUT
