@@ -1,11 +1,6 @@
-/**
- * Validates an Iranian national code using the official checksum algorithm.
- *
- * @param {string} code
- * @returns {boolean}
- */
+import moment from "jalali-moment";
 
-export function isValidNationalCode(code) {
+export const isValidNationalCode = (code) => {
   if (!/^\d{10}$/.test(code)) return false;
 
   // Reject repeated digits (e.g. 1111111111)
@@ -21,4 +16,12 @@ export function isValidNationalCode(code) {
   const remainder = sum % 11;
 
   return remainder < 2 ? check === remainder : check === 11 - remainder;
-}
+};
+
+export const jalaliToGregorian = (date) => {
+  return moment(date, "jYYYY/jMM/jDD").format("YYYY-MM-DD");
+};
+
+export const gregorianToJalali = (date) => {
+  return moment(date).locale("fa").format("YYYY/MM/DD");
+};

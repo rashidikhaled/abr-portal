@@ -36,7 +36,7 @@ v-for="item in policyStore.policies"
    <v-card
   class="policy-card"
   elevation="0"
-  @click="goToInsurance(item.id)"
+  @click="goToInsurance(item.ID)"
 >
   <!-- Top Banner -->
   <div class="card-top">
@@ -51,7 +51,7 @@ v-for="item in policyStore.policies"
       size="small"
       class="status-chip"
     >
-      عمر 
+        {{ translateId(item.StatusID) }}
     </v-chip>
   </div>
 
@@ -113,6 +113,7 @@ import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import moment from "jalali-moment";
 import { getPolicyListByNationalNo } from "@/api/authApi";
+import { translateId } from "@/utils/translator";
 
 const route = useRoute();
 const router = useRouter();
@@ -164,8 +165,6 @@ const loadPolicies = async () => {
 };
 
 const goToInsurance = (id) => {
-  console.log("Selected Policy:", id);
-
   router.push({
     name: "insurance",
     query: {
@@ -237,6 +236,7 @@ onMounted(loadPolicies);
 
 .status-chip {
   font-weight: bold;
+  font-size: 15px;
 }
 
 .card-body {

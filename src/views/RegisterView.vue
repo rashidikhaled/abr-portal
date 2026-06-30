@@ -12,9 +12,11 @@
 
           <v-text-field v-model="NationalCode" label="کد ملی" variant="outlined" density="comfortable"
             prepend-inner-icon="mdi-card-account-details" maxlength="10" :error-messages="errors.NationalCode" />
+          <DatePicker v-model="DateOfBirth" auto-submit custom-input="#birthDate" :editable="false">
+          </DatePicker>
 
-          <v-text-field v-model="DateOfBirth" label="تاریخ تولد" type="date" variant="outlined" density="comfortable"
-            prepend-inner-icon="mdi-calendar" :error-messages="errors.DateOfBirth" />
+          <v-text-field id="birthDate" label="تاریخ تولد" prepend-inner-icon="mdi-calendar" variant="outlined" readonly
+            :model-value="DateOfBirth" :error-messages="errors.DateOfBirth" />
 
           <v-btn type="submit" color="primary" block size="large" :loading="isSubmitting" :disabled="isSubmitting">
             ثبت نام
@@ -57,6 +59,7 @@
       </div>
     </div>
 
+    <!-- Feedback snackbar for success/error messages -->
     <v-snackbar v-model="snackbar.show" :color="snackbar.color" timeout="3000">
       {{ snackbar.text }}
     </v-snackbar>
@@ -70,17 +73,18 @@ import * as yup from "yup";
 import { register } from "@/api/authApi";
 import { ref } from "vue";
 import { isValidNationalCode } from "../utils/validators";
+import moment from "jalali-moment";
 
 const router = useRouter();
 
+// Reactive snackbar state for user feedback
 const snackbar = ref({
   show: false,
   text: "",
   color: "success",
 });
 
-
-
+// Form validation schema using Yup
 const schema = yup.object({
   MobileNo: yup
     .string()
@@ -90,33 +94,44 @@ const schema = yup.object({
   NationalCode: yup
     .string()
     .required("کد ملی الزامی است")
-    .test(
-      "national-code",
-      "کد ملی معتبر نیست",
-      value => isValidNationalCode(value ?? "")
+    .test("national-code", "کد ملی معتبر نیست", (value) =>
+      isValidNationalCode(value ?? ""),
     ),
 
   DateOfBirth: yup.string().required("تاریخ تولد الزامی است"),
 });
 
+// Initialize form with validation schema
 const { defineField, errors, handleSubmit, isSubmitting } = useForm({
   validationSchema: schema,
 });
 
+// Define form fields bound to v-model
 const [MobileNo] = defineField("MobileNo");
 const [NationalCode] = defineField("NationalCode");
 const [DateOfBirth] = defineField("DateOfBirth");
 
+// Handle form submission: convert date and call register API
 const submit = handleSubmit(async (values) => {
   try {
-    await register(values);
+    // Convert Jalali date to Gregorian before sending to API
+    const payload = {
+      ...values,
+      DateOfBirth: moment(values.DateOfBirth, "jYYYY/jMM/jDD").format(
+        "YYYY-MM-DD",
+      ),
+    };
+    console.log('payload :>> ', payload);
+    await register(payload);
 
+    // Show success snackbar
     snackbar.value = {
       show: true,
       text: "ثبت نام با موفقیت انجام شد.",
       color: "success",
     };
 
+    // Redirect to auth page after a short delay
     setTimeout(() => {
       router.push({
         name: "auth",
@@ -127,6 +142,7 @@ const submit = handleSubmit(async (values) => {
       });
     }, 1000);
   } catch (error) {
+    // Show error snackbar with API message or fallback
     snackbar.value = {
       show: true,
       text: error.response?.data?.message ?? "ثبت نام انجام نشد.",
@@ -152,6 +168,7 @@ const submit = handleSubmit(async (values) => {
   align-items: center;
   padding: 40px 20px;
 
+  /* Soft dual-gradient background */
   background:
     radial-gradient(circle at 15% 20%, #dbeafe 0%, transparent 35%),
     radial-gradient(circle at 85% 80%, #e0e7ff 0%, transparent 40%),
@@ -170,6 +187,7 @@ const submit = handleSubmit(async (values) => {
 .register-card {
   flex: 1;
 
+  /* Glass-morphism effect */
   background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(18px);
 
@@ -194,6 +212,7 @@ const submit = handleSubmit(async (values) => {
 
   border-radius: 28px;
 
+  /* Blue gradient for guide panel */
   background: linear-gradient(135deg, #1e3a8a, #3b82f6);
 
   color: white;
@@ -216,6 +235,7 @@ const submit = handleSubmit(async (values) => {
   top: -120px;
   right: -120px;
 
+  /* Subtle decorative overlay */
   background: rgba(255, 255, 255, 0.1);
 }
 
@@ -224,6 +244,7 @@ h1 {
   font-size: 26px;
   font-weight: 800;
 
+  /* Gradient text effect */
   background: linear-gradient(135deg, #0f172a, #1d4ed8);
   -webkit-text-fill-color: transparent;
 
@@ -274,6 +295,7 @@ p {
 
   border-radius: 14px;
 
+  /* Semi-transparent background for privacy note */
   background: rgba(255, 255, 255, 0.12);
 
   display: flex;
@@ -301,6 +323,7 @@ p {
   border: none;
   border-radius: 16px;
 
+  /* Blue gradient button */
   background: linear-gradient(135deg, #3b82f6, #1d4ed8);
 
   color: white;
@@ -315,6 +338,12 @@ p {
 .btn:hover {
   transform: translateY(-3px);
   box-shadow: 0 18px 40px rgba(37, 99, 235, 0.25);
+}
+
+.date-field input,
+.vpd-input-group input {
+  height: 56px !important;
+  border-radius: 16px !important;
 }
 
 /* RESPONSIVE */

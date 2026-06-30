@@ -7,6 +7,11 @@ const routes = [
   },
 
   {
+  path: "/Payment/:paymentId",
+  name: "Payment",
+  component: () => import("../views/PaymentPage.vue"),
+},
+  {
     path: "/auth",
     name: "auth",
     component: () => import("../views/AuthView.vue"),
